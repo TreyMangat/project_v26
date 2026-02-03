@@ -12,7 +12,6 @@
         body { font-family: 'Quicksand', sans-serif; background: linear-gradient(180deg, #e0f2fe 0%, #fbcfe8 100%); touch-action: manipulation; overflow: hidden; height: 100vh; }
         .font-romantic { font-family: 'Pacifico', cursive; }
         
-        /* Visual Haptic Shake */
         @keyframes shake {
             0% { transform: translate(1px, 1px) rotate(0deg); }
             10% { transform: translate(-1px, -2px) rotate(-1deg); }
@@ -29,7 +28,6 @@
         
         .watermark { position: absolute; bottom: 25px; right: 25px; font-family: 'Pacifico', cursive; color: rgba(255, 255, 255, 0.7); font-size: 1.4rem; cursor: pointer; z-index: 60; }
         
-        /* Smooth Fade In for the P.S. Note */
         .fade-in { animation: fadeIn 2s ease-in forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -40,7 +38,7 @@
     <div class="watermark" id="initials"></div>
 
     <audio id="bg-music" loop>
-        <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
+        <source src="ordinary.mp3" type="audio/mpeg">
     </audio>
 
     <div id="game-container" class="relative z-10 text-center w-full max-w-md bg-white/40 backdrop-blur-md p-8 rounded-3xl shadow-2xl border border-white/50">
@@ -58,12 +56,12 @@
     </div>
 
     <script>
-        // PRIVACY OBFUSCATION
-        const secretInitials = atob("VCArIFM=");
-        const secretAnniversary = atob("U2luY2UgMTAvMjAvMjIg4p2k77iP");
+        // OBFUSCATION FIX: Heart emoji added directly in JS to avoid decoding errors
+        const secretInitials = atob("VCArIFM="); // T + S
+        const secretDateText = atob("U2luY2UgMTAvMjAvMjI="); // Since 10/20/22
         
         document.getElementById('initials').innerText = secretInitials;
-        document.getElementById('initials').onclick = () => alert(secretAnniversary);
+        document.getElementById('initials').onclick = () => alert(secretDateText + " ❤️");
 
         const noBtn = document.getElementById('noBtn');
         const yesBtn = document.getElementById('yesBtn');
@@ -102,13 +100,14 @@
         });
 
         yesBtn.addEventListener('click', () => {
-            music.play().catch(() => console.log("Audio requires one more tap"));
+            // Volume set to 70%
+            music.volume = 0.7;
+            music.play().catch(e => console.log("Audio play failed: ", e));
             
             pandaImg.src = "https://media1.tenor.com/m/CapOmVksN9MAAAAd/menglanpanda-menglan.gif";
             question.innerText = "Yay! See you soon! 🥰";
             document.getElementById('button-group').style.display = 'none';
 
-            // Show P.S. Note with fade-in effect
             psNote.classList.remove('hidden');
             psNote.classList.add('fade-in');
 
