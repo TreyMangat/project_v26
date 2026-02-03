@@ -28,6 +28,10 @@
         @keyframes float-bg { 0% { transform: translateY(110vh) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; } }
         
         .watermark { position: absolute; bottom: 25px; right: 25px; font-family: 'Pacifico', cursive; color: rgba(255, 255, 255, 0.7); font-size: 1.4rem; cursor: pointer; z-index: 60; }
+        
+        /* Smooth Fade In for the P.S. Note */
+        .fade-in { animation: fadeIn 2s ease-in forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen p-6 relative" id="main-body">
@@ -44,15 +48,17 @@
             <img id="panda-img" src="https://media1.tenor.com/m/FdMseW_vMA0AAAAd/be-mine-will-you-be-my-valentines.gif" alt="Panda" class="rounded-2xl w-full h-full object-contain shadow-sm">
         </div>
         <h1 id="question" class="text-3xl md:text-4xl font-romantic text-pink-600 mb-10 leading-relaxed">Will you be my Valentine?</h1>
+        
         <div class="flex flex-col sm:flex-row justify-center items-center gap-6" id="button-group">
             <button id="yesBtn" class="bg-green-500 text-white font-bold py-4 px-10 rounded-full shadow-xl text-2xl">Yes! 💖</button>
             <button id="noBtn" class="bg-pink-500 text-white font-bold py-4 px-10 rounded-full shadow-lg text-xl">No</button>
         </div>
+
+        <p id="ps-note" class="hidden text-gray-600 italic mt-6 text-sm opacity-0">P.S. this is what my Comp Sci Degree is going towards</p>
     </div>
 
     <script>
         // PRIVACY OBFUSCATION
-        // "T + S" encoded: VCA9IFM= | "Since 10/20/22 ❤️" encoded: U2luY2UgMTAvMjAvMjIg4p2k77iP
         const secretInitials = atob("VCArIFM=");
         const secretAnniversary = atob("U2luY2UgMTAvMjAvMjIg4p2k77iP");
         
@@ -65,6 +71,7 @@
         const body = document.getElementById('main-body');
         const music = document.getElementById('bg-music');
         const question = document.getElementById('question');
+        const psNote = document.getElementById('ps-note');
 
         let clickCount = 0;
         const sadGifs = [
@@ -78,14 +85,11 @@
 
         noBtn.addEventListener('click', () => {
             clickCount++;
-            // Visual Haptic (Shake)
             body.classList.add('shake-active');
             setTimeout(() => body.classList.remove('shake-active'), 300);
 
-            // GIF Change
             pandaImg.src = sadGifs[Math.floor(Math.random() * sadGifs.length)];
 
-            // Scale logic
             let noScale = Math.max(0.1, 1 - (clickCount * 0.15));
             let yesScale = 1 + (clickCount * 0.2);
             noBtn.style.transform = `scale(${noScale})`;
@@ -98,16 +102,18 @@
         });
 
         yesBtn.addEventListener('click', () => {
-            // PLAY MUSIC (Native Audio is more reliable on iPhone)
             music.play().catch(() => console.log("Audio requires one more tap"));
             
             pandaImg.src = "https://media1.tenor.com/m/CapOmVksN9MAAAAd/menglanpanda-menglan.gif";
             question.innerText = "Yay! See you soon! 🥰";
             document.getElementById('button-group').style.display = 'none';
 
+            // Show P.S. Note with fade-in effect
+            psNote.classList.remove('hidden');
+            psNote.classList.add('fade-in');
+
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 
-            // APPLE CALENDAR FIX (.ics file)
             setTimeout(() => {
                 if(confirm("Add our date to your Calendar?")) {
                     const icsData = [
@@ -115,7 +121,7 @@
                         "VERSION:2.0",
                         "BEGIN:VEVENT",
                         "DTSTART:20260215T160000",
-                        "DTEND:20260215T200000",
+                        "DTEND:20260215T210000",
                         "SUMMARY:Valentines 2026!",
                         "DESCRIPTION:We can move stuff around, but I'll be picking you up and we are going for dinner ;)",
                         "END:VEVENT",
@@ -133,7 +139,6 @@
             }, 3000);
         });
 
-        // Background Hearts
         for (let i = 0; i < 15; i++) {
             const heart = document.createElement('div');
             heart.classList.add('bg-heart');
