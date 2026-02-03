@@ -56,9 +56,8 @@
     </div>
 
     <script>
-        // OBFUSCATION FIX: Heart emoji added directly in JS to avoid decoding errors
-        const secretInitials = atob("VCArIFM="); // T + S
-        const secretDateText = atob("U2luY2UgMTAvMjAvMjI="); // Since 10/20/22
+        const secretInitials = atob("VCArIFM=");
+        const secretDateText = atob("U2luY2UgMTAvMjAvMjI=");
         
         document.getElementById('initials').innerText = secretInitials;
         document.getElementById('initials').onclick = () => alert(secretDateText + " ❤️");
@@ -72,6 +71,20 @@
         const psNote = document.getElementById('ps-note');
 
         let clickCount = 0;
+        
+        // --- RESTORED NO MESSAGES ---
+        const noMessages = [
+            "No",
+            "Are you sure?",
+            "Really sure??",
+            "Think again! 🥺",
+            "Last chance...",
+            "Surely not?",
+            "You're breaking my heart 💔",
+            "I'm gonna cry...",
+            "Well now you dont have a choice"
+        ];
+
         const sadGifs = [
             "https://media1.tenor.com/m/-Y6seYBmowUAAAAd/shy-sad.gif",
             "https://media1.tenor.com/m/B7XDU1yBc-4AAAAC/sad-panda-panda.gif",
@@ -93,14 +106,16 @@
             noBtn.style.transform = `scale(${noScale})`;
             yesBtn.style.transform = `scale(${yesScale})`;
 
-            if (clickCount >= 8) {
-                noBtn.innerText = "Well now you dont have a choice";
-                if (clickCount >= 9) noBtn.style.display = 'none';
+            // Update text from the array
+            if (clickCount < noMessages.length) {
+                noBtn.innerText = noMessages[clickCount];
+            } else {
+                // Once we pass the final message, hide the button
+                noBtn.style.display = 'none';
             }
         });
 
         yesBtn.addEventListener('click', () => {
-            // Volume set to 70%
             music.volume = 0.7;
             music.play().catch(e => console.log("Audio play failed: ", e));
             
